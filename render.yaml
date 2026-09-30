@@ -1,0 +1,60 @@
+services:
+  - type: web
+    name: resumeiq-backend
+    runtime: java
+    plan: free
+    rootDir: backend
+    buildCommand: ./gradlew clean bootJar
+    startCommand: java -jar build/libs/*.jar
+    healthCheckPath: /actuator/health
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: resumeiq-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: resumeiq-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: resumeiq-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: resumeiq-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: resumeiq-db
+          property: password
+      - key: JWT_SECRET
+        generateValue: true
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: OPENROUTER_BASE_URL
+        value: https://openrouter.ai/api/v1/chat/completions
+      - key: OPENROUTER_MODEL
+        value: meta-llama/llama-3.3-70b-instruct
+      - key: FRONTEND_URL
+        sync: false
+      - key: APP_CORS_ALLOWED_ORIGIN
+        sync: false
+
+  - type: web
+    name: resumeiq-frontend
+    runtime: static
+    plan: free
+    rootDir: frontend
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        sync: false
+
+databases:
+  - name: resumeiq-db
+    plan: free
+    region: singapore
+    databaseName: resumeiq
+    user: resumeiq_user

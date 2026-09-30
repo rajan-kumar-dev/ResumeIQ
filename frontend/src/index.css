@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body, #root {
+    height: 100%;
+  }
+  body {
+    @apply bg-ink text-parchment font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .paper-shadow {
+    box-shadow: 0 1px 0 rgba(255, 255, 255, 0.04) inset,
+      0 12px 30px -12px rgba(0, 0, 0, 0.55);
+  }
+}

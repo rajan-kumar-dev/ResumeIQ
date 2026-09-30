@@ -1,0 +1,20 @@
+# Environment/secrets
+.env
+.env.*
+!.env.example
+
+# Node
+frontend/node_modules/
+frontend/dist/
+
+# Java/Gradle
+backend/.gradle/
+backend/build/
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+__MACOSX/

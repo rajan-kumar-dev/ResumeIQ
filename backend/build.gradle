@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.2'
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'com.resumeiq'
+version = '0.1.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    jjwtVersion = '0.12.5'
+    pdfboxVersion = '3.0.2'
+    poiVersion = '5.2.5'
+}
+
+dependencies {
+    // Core
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux' // WebClient (Anthropic API) + SSE
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Data / DB
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'org.postgresql:postgresql'
+    implementation 'com.bucket4j:bucket4j_jdk17-core:8.19.0'
+
+    // Security / JWT
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation "io.jsonwebtoken:jjwt-api:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-impl:${jjwtVersion}"
+    runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}"
+
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+
+    // File parsing: PDF + DOCX
+    implementation "org.apache.pdfbox:pdfbox:${pdfboxVersion}"
+    implementation "org.apache.poi:poi-ooxml:${poiVersion}"
+
+    // Dev tools
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
