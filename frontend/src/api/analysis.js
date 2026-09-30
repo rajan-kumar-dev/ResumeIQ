@@ -114,10 +114,15 @@ export function parseAnalysis(fullText) {
 
   const scoreSection = getSection("Match Score");
 
-  const scoreMatch = scoreSection.match(/\b\d{1,3}\b/);
+  // Supports:
+  // 85
+  // 85/100
+  // 85 / 100
+  const scoreMatch =
+    scoreSection.match(/\b(\d{1,3})\s*(?:\/\s*100)?\b/);
 
   const score = scoreMatch
-    ? Math.min(100, Math.max(0, parseInt(scoreMatch[0], 10)))
+    ? Math.min(100, Math.max(0, parseInt(scoreMatch[1], 10)))
     : null;
 
   const parseList = (text) => {
@@ -127,7 +132,7 @@ export function parseAnalysis(fullText) {
       .split("\n")
       .map((line) =>
         line
-          .replace(/^\s*[-*]\s*/, "")
+          .replace(/^\s*[-*•]\s*/, "")
           .replace(/^\s*\d+\.\s*/, "")
           .trim()
       )
