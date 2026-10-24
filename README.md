@@ -165,17 +165,23 @@ The request contains resumeText and jobDescription. Authentication and resume up
 
 ## Screenshots
 
-### Sign in and registration
-![ResumeIQ sign-in screen](<img width="1021" height="734" alt="ResumeIQ signIn Screen" src="https://github.com/user-attachments/assets/8f9c5fe3-c544-419e-8dcb-acc964972852" />
-)
+### 1. Sign in and registration
 
-### Resume and job-description inputs
-![ResumeIQ analysis inputs](<img width="2048" height="1136" alt="ResumeIQ analysis input" src="https://github.com/user-attachments/assets/c9f6392b-13dd-4b3e-ba8c-ec0ccaf405ed" />
-)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/8f9c5fe3-c544-419e-8dcb-acc964972852" alt="ResumeIQ sign-in and registration screen" width="100%" />
+</p>
 
-### Completed match report
-![ResumeIQ completed match report](<img width="2048" height="1156" alt="ResumeIQ comp  match report" src="https://github.com/user-attachments/assets/42babfac-0de3-4077-b8a4-21bb9bb89fe4" />
-)
+### 2. Resume and job-description inputs
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c9f6392b-13dd-4b3e-ba8c-ec0ccaf405ed" alt="ResumeIQ resume upload and job-description input screen" width="100%" />
+</p>
+
+### 3. Completed match report
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/42babfac-0de3-4077-b8a4-21bb9bb89fe4" alt="ResumeIQ completed match report with skill analysis and recommendations" width="100%" />
+</p>
 
 ## Documentation
 
