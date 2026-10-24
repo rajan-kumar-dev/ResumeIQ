@@ -168,19 +168,19 @@ The request contains resumeText and jobDescription. Authentication and resume up
 ### 1. Sign in and registration
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/8f9c5fe3-c544-419e-8dcb-acc964972852" alt="ResumeIQ sign-in and registration screen" width="100%" />
+  <img src="https://github.com/user-attachments/assets/8f9c5fe3-c544-419e-8dcb-acc964972852" alt="ResumeIQ sign-in and registration screen" width="92%" />
 </p>
 
 ### 2. Resume and job-description inputs
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/c9f6392b-13dd-4b3e-ba8c-ec0ccaf405ed" alt="ResumeIQ resume upload and job-description input screen" width="100%" />
+  <img src="https://github.com/user-attachments/assets/c9f6392b-13dd-4b3e-ba8c-ec0ccaf405ed" alt="ResumeIQ resume upload and job-description input screen" width="92%" />
 </p>
 
 ### 3. Completed match report
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/42babfac-0de3-4077-b8a4-21bb9bb89fe4" alt="ResumeIQ completed match report with skill analysis and recommendations" width="100%" />
+  <img src="https://github.com/user-attachments/assets/42babfac-0de3-4077-b8a4-21bb9bb89fe4" alt="ResumeIQ completed match report with skill analysis and recommendations" width="92%" />
 </p>
 
 ## Documentation
