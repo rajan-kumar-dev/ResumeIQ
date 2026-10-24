@@ -1,198 +1,164 @@
 # ResumeIQ — AI-Powered Resume Analyzer
 
-ResumeIQ helps job seekers compare their resume with a job description and understand how well their experience matches the role. It analyzes resume content and presents a match score, matching skills, missing skills, and suggestions for improvement.
+ResumeIQ helps job seekers compare a resume with a job description and understand how well their experience matches a role. It extracts text from PDF/DOCX files, streams an AI-generated analysis, and presents a match score, matching skills, missing skills, and actionable suggestions.
+
+**Live demo:** [https://3.104.215.198/resumeiq/](https://3.104.215.198/resumeiq/)  
+**Deployment:** AWS Lightsail · Docker Compose · Nginx · HTTPS
 
 ## Features
 
-- **User authentication** with registration/login and JWT-based access.
-- **Resume upload and text extraction** from PDF and DOCX files.
-- **AI-powered resume analysis** against a pasted job description.
-- **Live analysis updates** streamed to the frontend using Server-Sent Events (SSE).
-- **Match report** with a match score, matching skills, missing skills, and suggestions.
-- **Responsive web interface** built with React and Tailwind CSS.
+- JWT-based registration and login with BCrypt password hashing
+- PDF and DOCX resume text extraction
+- AI-powered resume-to-job-description comparison through OpenRouter
+- Streaming analysis using Server-Sent Events (SSE)
+- Match score, matching skills, missing skills, and improvement suggestions
+- Responsive React interface
 
-## Tech Stack
+## Tech stack
 
-| Area | Technologies |
+| Layer | Technologies |
 |---|---|
-| Frontend | React, Vite, Tailwind CSS, JavaScript |
-| Backend | Java 17, Spring Boot, Spring Security |
+| Frontend | React, Vite, Tailwind CSS |
+| Backend | Java 17, Spring Boot 3, Spring Security |
 | Authentication | JWT, BCrypt |
 | Database | PostgreSQL, Spring Data JPA / Hibernate |
-| AI integration | OpenRouter API (configured model: `meta-llama/llama-3.3-70b-instruct`) |
+| AI | OpenRouter API |
 | Resume parsing | Apache PDFBox, Apache POI |
 | Streaming | Server-Sent Events (SSE) |
-| Build tools | npm, Gradle |
+| Deployment | AWS Lightsail, Docker Compose, Nginx, Let's Encrypt |
 
 ## Architecture
 
-```text
-User
- |
- v
-React + Vite frontend
- |
- | REST API / streamed SSE response
- v
-Spring Boot backend
- |          |             |
- v          v             v
-PostgreSQL  Resume parser OpenRouter API
-             (PDF/DOCX)   (AI analysis)
-```
+The application runs alongside ForgeFlow on the same Lightsail VM. Host-level Nginx is the single public entry point and routes requests by path. ResumeIQ has a separate Docker Compose project and database volume.
 
-## Project Structure
+![ResumeIQ AWS Lightsail deployment architecture](docs/architecture.svg)
 
-```text
+For the request flow, deployment details, network boundaries, and Mermaid source diagrams, see [docs/architecture.md](docs/architecture.md).
+
+### Request flow
+
+1. The user signs in and uploads a PDF/DOCX resume.
+2. The backend extracts text using PDFBox or Apache POI.
+3. The user enters a job description and starts an analysis.
+4. The backend sends the resume and job description to OpenRouter.
+5. The model response streams through Spring Boot and Nginx to the frontend.
+6. ResumeIQ displays the score, skill gaps, and suggestions.
+
+## Project structure
+
+~~~text
 ResumeIQ/
+├── backend/
+│   ├── src/main/java/com/resumeiq/backend/
+│   ├── src/main/resources/application.yml
+│   ├── Dockerfile
+│   ├── build.gradle
+│   └── gradlew
 ├── frontend/
 │   ├── src/
 │   ├── public/
-│   ├── .env.example
+│   ├── Dockerfile
+│   ├── nginx.conf
 │   ├── package.json
 │   └── vite.config.js
-└── backend/
-    ├── src/main/java/
-    ├── src/main/resources/
-    │   └── application.yml
-    ├── .env.example
-    ├── build.gradle
-    └── settings.gradle
-```
+├── docs/
+│   ├── architecture.md
+│   ├── architecture.svg
+│   └── screenshots/
+├── docker-compose.yml
+├── DEPLOYMENT.md
+└── render.yaml
+~~~
 
-## Prerequisites
+## Run locally
 
-Install the following before running the project:
+### Prerequisites
 
-- Java 17 or later
-- Node.js and npm (use a version compatible with the Vite version in `frontend/package.json`)
-- PostgreSQL
-- Gradle 8.x, or use the included Gradle wrapper if it is configured and working
+- Java 17+
+- Node.js compatible with the Vite version in frontend/package.json
+- Docker and Docker Compose, or a local PostgreSQL instance
 - An OpenRouter API key for AI analysis
 
-## Run Locally
+### Start the backend
 
-### 1. Clone the repository
+The backend reads configuration from environment variables; Spring Boot does not automatically load a .env file. From the repository root, configure the required variables in your shell or IDE:
 
-```bash
-git clone https://github.com/YOUR_USERNAME/YOUR_REPOSITORY.git
-cd YOUR_REPOSITORY
-```
+~~~bash
+export DB_HOST=localhost
+export DB_PORT=5432
+export DB_NAME=resumeiq
+export DB_USERNAME=your_database_user
+export DB_PASSWORD=your_database_password
+export JWT_SECRET=replace_with_a_long_random_secret
+export OPENROUTER_API_KEY=your_openrouter_api_key
 
-Replace the repository URL with your GitHub repository URL.
-
-### 2. Configure PostgreSQL
-
-Create a database for the application:
-
-```sql
-CREATE DATABASE resumeiq;
-```
-
-If you use a dedicated database user, create that user and grant it the necessary privileges. Update the database username and password through environment variables.
-
-### 3. Configure the backend
-
-Set these environment variables in your terminal or IDE run configuration:
-
-```bash
-export DB_USERNAME="your_database_username"
-export DB_PASSWORD="your_database_password"
-export JWT_SECRET="replace_with_a_long_random_secret_at_least_32_characters"
-export OPENROUTER_API_KEY="your_openrouter_api_key"
-```
-
-The backend configuration uses PostgreSQL at `localhost:5432/resumeiq` by default and starts on port `8080`.
-
-**Important:** The project configuration reads environment variables; Spring Boot does not automatically load a `.env` file by itself. Set the variables in your shell, IDE, or deployment platform.
-
-Start the backend from the `backend` directory:
-
-```bash
 cd backend
-gradle bootRun
-```
+./gradlew bootRun
+~~~
 
-If the Gradle wrapper is available and configured, you can use `./gradlew bootRun` instead.
+Create the PostgreSQL database resumeiq first and ensure the database credentials match the environment variables.
 
-### 4. Configure and start the frontend
+### Start the frontend
 
-Open another terminal:
+In another terminal:
 
-```bash
+~~~bash
 cd frontend
 cp .env.example .env
-```
-
-The default frontend environment setting is:
-
-```env
-VITE_API_BASE_URL=http://localhost:8080
-```
-
-Install dependencies and start the development server:
-
-```bash
-npm install
+npm ci
 npm run dev
-```
+~~~
 
-Open the local URL printed by Vite (usually `http://localhost:5173`).
+The local frontend defaults to http://localhost:5173 and the local backend to http://localhost:8080.
 
-### 5. Create a production frontend build
+### Run with Docker Compose
 
-From the `frontend` directory:
+For a local Compose run, create a root .env file containing DB_PASSWORD, JWT_SECRET, and OPENROUTER_API_KEY, then start the stack:
 
-```bash
-npm run build
-```
+~~~bash
+docker compose up --build -d
+docker compose ps
+docker compose logs --tail=100
+~~~
 
-The production files are generated in `frontend/dist/`.
+The production Compose configuration uses host-loopback ports and a /resumeiq/ path prefix. See [DEPLOYMENT.md](DEPLOYMENT.md) before deploying or adapting the Compose file.
 
-## How Analysis Works
+## API overview
 
-1. The user signs in and uploads a PDF or DOCX resume.
-2. The backend extracts readable text from the document.
-3. The user provides a job description.
-4. The backend sends the relevant content to the configured AI provider.
-5. The analysis is streamed to the frontend, which displays the match score, matching and missing skills, and suggestions.
+The analysis streaming endpoint is:
 
-## API Overview
-
-The application includes authentication, resume-upload, and analysis functionality. The analysis streaming endpoint is:
-
-```http
+~~~http
 POST /api/analysis/stream
-```
+Content-Type: application/json
+Authorization: Bearer <JWT>
+~~~
 
-The resume upload endpoint accepts a PDF or DOCX file and requires authentication. Check the backend controller classes for the exact request/response formats and other available routes.
+The request contains resumeText and jobDescription. Authentication and resume upload routes are implemented under /api/auth and /api/resume; see the controllers under backend/src/main/java/com/resumeiq/backend/controller for details.
 
-## Security Notes
+## Security and privacy
 
-- Never commit real API keys, database passwords, JWT secrets, or production environment files.
-- Keep `.env` files out of Git; commit only safe example files such as `.env.example`.
-- Use a strong, randomly generated JWT secret.
-- Configure production database credentials and CORS origins before deploying.
-- Resume files may contain personal information. Handle uploaded resumes and extracted text responsibly.
+- Never commit real API keys, JWT secrets, database passwords, or production .env files.
+- Keep production database ports private; only the HTTPS entry point should be public.
+- Use strong, unique credentials for the database and JWT signing key.
+- Uploaded resumes can contain personal information; handle, retain, and share resume content responsibly.
+- The deployed host currently serves the app under an IP-based HTTPS URL; a custom domain can be configured later.
 
-## Current Limitations
+## Documentation and screenshots
 
-- Resume parsing extracts text from PDF/DOCX files; scanned image-only PDFs may require OCR.
-- AI results depend on the configured model and the quality of the resume and job description.
-- Confirm the backend's currently implemented routes and features before relying on them in production.
+- [Deployment guide](DEPLOYMENT.md)
+- [Architecture notes and diagrams](docs/architecture.md)
+- App screenshots belong in docs/screenshots/. The previously shared report captures were taken before the final whitespace/streaming fix, so they have intentionally not been used as portfolio screenshots. Add fresh captures from the corrected live UI to keep this repository accurate.
 
-## Future Improvements
+## Current limitations
 
-- Save and revisit previous resume analyses.
-- Export analysis reports.
-- Add OCR support for scanned resumes.
-- Add more detailed keyword and job-skill recommendations.
-- Add automated tests and production deployment workflows.
+- Text extraction does not perform OCR on scanned image-only PDFs.
+- AI output may vary between runs; the scoring rubric and lower-variance model settings improve consistency but do not guarantee identical results.
+- The project does not currently specify an open-source license.
 
-## Contributing
+## Future improvements
 
-Contributions and suggestions are welcome. Fork the repository, create a feature branch, and open a pull request with a clear description of the change.
-
-## License
-
-No license has been specified yet. Add a `LICENSE` file if you want to define how others may use, modify, and distribute this project.
+- Persist and revisit previous analyses
+- Export reports
+- Add OCR for scanned PDFs
+- Add automated tests and CI deployment checks
+- Add database migrations and explicit data-retention controls
