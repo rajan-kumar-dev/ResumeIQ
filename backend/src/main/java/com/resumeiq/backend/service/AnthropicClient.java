@@ -49,6 +49,7 @@ public class AnthropicClient {
         Map<String, Object> requestBody = Map.of(
                 "model", model,
                 "max_tokens", maxTokens,
+                "temperature", 0.0,
                 "stream", true,
                 "messages", List.of(
                         Map.of(
@@ -71,7 +72,7 @@ public class AnthropicClient {
                 .bodyToFlux(
                         new ParameterizedTypeReference<ServerSentEvent<String>>() {}
                 )
-                .flatMap(this::extractTextDelta)
+                .concatMap(this::extractTextDelta)
                 .doOnNext(text -> System.out.println("AI CHUNK >>> " + text))
                 .doOnError(error -> System.out.println("AI ERROR >>> " + error.getMessage()));
     }

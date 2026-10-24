@@ -77,7 +77,7 @@ export async function streamAnalysis(
       const dataLines = rawEvent
         .split(/\r?\n/)
         .filter((line) => line.startsWith("data:"))
-        .map((line) => line.slice(5).trimStart());
+        .map((line) => line.slice(5))
 
       if (dataLines.length > 0) {
         onChunk(dataLines.join("\n"));
@@ -90,7 +90,7 @@ export async function streamAnalysis(
     const dataLines = buffer
       .split(/\r?\n/)
       .filter((line) => line.startsWith("data:"))
-      .map((line) => line.slice(5).trimStart());
+      .map((line) => line.slice(5))
 
     if (dataLines.length > 0) {
       onChunk(dataLines.join("\n"));
