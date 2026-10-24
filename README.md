@@ -163,13 +163,22 @@ The request contains resumeText and jobDescription. Authentication and resume up
 - Uploaded resumes can contain personal information; handle, retain, and share resume content responsibly.
 - The deployed host currently serves the app under an IP-based HTTPS URL; a custom domain can be configured later.
 
-## Documentation and screenshots
+## Screenshots
+
+### Sign in and registration
+![ResumeIQ sign-in screen](docs/screenshots/resumeiq-login.png)
+
+### Resume and job-description inputs
+![ResumeIQ analysis inputs](docs/screenshots/resumeiq-analysis-inputs.png)
+
+### Completed match report
+![ResumeIQ completed match report](docs/screenshots/resumeiq-analysis-report.png)
+
+## Documentation
 
 - [Deployment guide](DEPLOYMENT.md)
-- [Architecture notes and diagrams](docs/architecture.md)
-- [Screenshot gallery guidance](docs/screenshots/README.md)
-
-Add fresh screenshots from the corrected live UI to docs/screenshots/ after hiding personal resume content and any private information. The early debugging captures showed the pre-fix text-spacing issue and should not be used as portfolio screenshots.
+- [Architecture and request-flow diagrams](docs/architecture.md)
+- [Screenshot gallery details](docs/screenshots/README.md)
 
 ## Current limitations
 
