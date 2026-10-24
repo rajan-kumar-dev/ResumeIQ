@@ -32,7 +32,7 @@ flowchart TB
 | Host Nginx | HTTPS termination, path routing, reverse proxy | Public ports 80/443 |
 | ResumeIQ frontend | Serves the production Vite build and SPA fallback | Host loopback 127.0.0.1:3002 |
 | ResumeIQ backend | JWT auth, resume parsing, analysis endpoint, SSE response | Host loopback 127.0.0.1:18081 |
-| PostgreSQL | Stores user and analysis-related records | Internal Docker network only |
+| PostgreSQL | Stores user account records used by authentication | Internal Docker network only |
 | Named volume | Persists PostgreSQL data across container recreation | Docker-managed |
 | OpenRouter | Generates AI analysis completions | Outbound HTTPS from backend |
 
@@ -56,7 +56,6 @@ sequenceDiagram
     participant API as Spring Boot
     participant Parser as PDFBox / Apache POI
     participant AI as OpenRouter
-    participant DB as PostgreSQL
 
     User->>UI: Upload PDF/DOCX
     UI->>N: POST /resumeiq/api/resume/upload
@@ -72,7 +71,6 @@ sequenceDiagram
     API-->>N: SSE response
     N-->>UI: Forward SSE chunks without buffering
     UI-->>User: Match score, gaps, suggestions
-    API->>DB: Persist application records as implemented
 ~~~
 
 ## Runtime and configuration
