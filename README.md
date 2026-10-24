@@ -33,7 +33,7 @@ The application runs alongside ForgeFlow on the same Lightsail VM. Host-level Ng
 
 **Architecture diagrams:** [Deployment topology and request flow](docs/architecture.md)
 
-For the request flow, deployment details, network boundaries, and Mermaid source diagrams, see [docs/architecture.md](docs/architecture.md).
+The diagrams in the architecture guide are written in Mermaid, so GitHub renders them directly in the repository.
 
 ### Request flow
 
@@ -63,8 +63,8 @@ ResumeIQ/
 │   └── vite.config.js
 ├── docs/
 │   ├── architecture.md
-│   ├── architecture.md
 │   └── screenshots/
+│       └── README.md
 ├── docker-compose.yml
 ├── DEPLOYMENT.md
 └── render.yaml
