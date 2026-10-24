@@ -33,6 +33,26 @@ The application runs alongside ForgeFlow on the same Lightsail VM. Host-level Ng
 
 **Architecture diagrams:** [Deployment topology and request flow](docs/architecture.md)
 
+~~~mermaid
+flowchart TB
+    User[Browser / user]
+    Nginx[Host Nginx + HTTPS<br/>Public ports 80 / 443]
+    ForgeFlow[ForgeFlow frontend<br/>127.0.0.1:3000]
+    UI[ResumeIQ frontend<br/>React + Vite + Nginx<br/>127.0.0.1:3002]
+    API[ResumeIQ backend<br/>Spring Boot 3 / Java 17<br/>127.0.0.1:18081 → 8080]
+    DB[(PostgreSQL 16<br/>Private Docker network)]
+    Volume[(resumeiq_postgres_data)]
+    AI[OpenRouter API<br/>Outbound HTTPS]
+    User --> Nginx
+    Nginx -->|/| ForgeFlow
+    Nginx -->|/resumeiq/| UI
+    Nginx -->|/resumeiq/api/*| API
+    UI -. same-origin API calls .-> Nginx
+    API --> DB
+    DB --- Volume
+    API --> AI
+~~~
+
 The diagrams in the architecture guide are written in Mermaid, so GitHub renders them directly in the repository.
 
 ### Request flow
