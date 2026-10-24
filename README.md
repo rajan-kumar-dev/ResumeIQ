@@ -31,7 +31,7 @@ ResumeIQ helps job seekers compare a resume with a job description and understan
 
 The application runs alongside ForgeFlow on the same Lightsail VM. Host-level Nginx is the single public entry point and routes requests by path. ResumeIQ has a separate Docker Compose project and database volume.
 
-![ResumeIQ AWS Lightsail deployment architecture](docs/architecture.svg)
+**Architecture diagrams:** [Deployment topology and request flow](docs/architecture.md)
 
 For the request flow, deployment details, network boundaries, and Mermaid source diagrams, see [docs/architecture.md](docs/architecture.md).
 
@@ -63,7 +63,7 @@ ResumeIQ/
 │   └── vite.config.js
 ├── docs/
 │   ├── architecture.md
-│   ├── architecture.svg
+│   ├── architecture.md
 │   └── screenshots/
 ├── docker-compose.yml
 ├── DEPLOYMENT.md
@@ -147,7 +147,9 @@ The request contains resumeText and jobDescription. Authentication and resume up
 
 - [Deployment guide](DEPLOYMENT.md)
 - [Architecture notes and diagrams](docs/architecture.md)
-- App screenshots belong in docs/screenshots/. The previously shared report captures were taken before the final whitespace/streaming fix, so they have intentionally not been used as portfolio screenshots. Add fresh captures from the corrected live UI to keep this repository accurate.
+- [Screenshot gallery guidance](docs/screenshots/README.md)
+
+Add fresh screenshots from the corrected live UI to docs/screenshots/ after hiding personal resume content and any private information. The early debugging captures showed the pre-fix text-spacing issue and should not be used as portfolio screenshots.
 
 ## Current limitations
 
